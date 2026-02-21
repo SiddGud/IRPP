@@ -16,8 +16,8 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # 2. Build the Docker image
-echo "🔨 Building Docker image (object_fetcher:latest)..."
-docker build -t object_fetcher:latest .
+echo "🔨 Building Docker image (object_fetcher_ros2)..."
+docker build -t object_fetcher_ros2 .
 
 if [ $? -ne 0 ]; then
     echo "❌ Docker build failed."
@@ -32,13 +32,14 @@ echo "   - Mounting workspace: $(pwd)"
 echo "   - Connecting to X11 Display: $DISPLAY"
 
 docker run -it --rm \
+  --name object_fetcher_container \
   --net=host \
   --ipc=host \
   --privileged \
   -e DISPLAY=$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v $(pwd):/home/ros/ws \
-  object_fetcher:latest \
+  object_fetcher_ros2 \
   /bin/bash -c "
     echo '🔧 Building ROS 2 workspace...' && \
     source /opt/ros/humble/setup.bash && \
